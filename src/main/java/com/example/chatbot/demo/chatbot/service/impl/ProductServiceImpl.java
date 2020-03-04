@@ -12,6 +12,7 @@ import com.example.chatbot.demo.chatbot.repository.ProductRepository;
 import com.example.chatbot.demo.chatbot.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -46,7 +47,23 @@ hs.add(product);
       fulfillmentMessageList.add(full);
       r.setFulfillmentMessages(fulfillmentMessageList);
       return r;
-    } else {
+    }
+
+    else if(g.equalsIgnoreCase("books"))
+    {
+      final String uri = "http://localhost:8082/getproductdetails?string="+g;
+
+      RestTemplate restTemplate = new RestTemplate();
+      String result = restTemplate.getForObject(uri, String.class);
+
+      System.out.println(result);
+
+      return null;
+
+    }
+
+
+    else {
       List<Product> li = productRepository.findByCategory(g);
       List<String> linew = li.stream().map(product -> product.getMaterial()).collect(Collectors.toList());
       Response r = new Response();
